@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dyal96 – Tools & Projects</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Light Mode (Default Pastel Theme) */
+    :root {
+      --bg-start: #e0f7fa; /* Light cyan */
+      --bg-end: #e8f5e9;   /* Light mint green */
+      --fg: #333;
+      --accent: #ff5c5c; /* Original red accent */
+      --card: #ffffff;
+      --card-shadow: rgba(0, 0, 0, 0.06);
+      /* Removed text-gradient-start and end as text will be solid black */
+    }
+
+    /* Dark Mode */
+    html.dark {
+      --bg-start: #2c3e50; /* Dark blue-gray */
+      --bg-end: #34495e;   /* Slightly darker blue-gray */
+      --fg: #ecf0f1; /* Light gray */
+      --accent: #9b59b6; /* Purple */
+      --card: #3b506b; /* Darker card background */
+      --card-shadow: rgba(0, 0, 0, 0.2);
+      --text-gradient-start: #bdc3c7; /* Lighter gray for dark mode title */
+      --text-gradient-end: #95a5a6;   /* Medium gray for dark mode title */
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      background: linear-gradient(to bottom right, var(--bg-start), var(--bg-end));
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+    }
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative; /* For positioning the toggle button */
+      width: 100%;
+      max-width: 1100px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0.25rem 0;
+      /* Text color for light mode */
+      color: var(--fg);
+      font-weight: 700;
+      transition: color 0.3s ease; /* Smooth transition for text color */
+    }
+    /* Apply gradient only in dark mode for the h1 */
+    html.dark header h1 {
+      background-image: linear-gradient(to right, var(--text-gradient-start), var(--text-gradient-end));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent; /* Make text transparent to show gradient */
+      transition: background-image 0.3s ease;
+    }
+    header p {
+      font-size: 1.1rem;
+      color: var(--fg); /* Use foreground color for better dark mode compatibility */
+      transition: color 0.3s ease;
+    }
+    .theme-toggle-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+      box-shadow: 0 2px 4px var(--card-shadow);
+    }
+    .theme-toggle-btn:hover {
+      background: var(--accent);
+      color: var(--card);
+      transform: translateY(-1px);
+    }
+    @media (max-width: 768px) {
+        .theme-toggle-btn {
+            position: static; /* Position normally on smaller screens */
+            margin-top: 1rem;
+            display: inline-block;
+        }
+    }
+
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    /* Specific styling for the GitHub Profile button in the header */
+    header > .btn {
+      display: inline-block; /* Make it fit content */
+      margin-top: 1rem; /* Add some space below the paragraph */
+      padding: 0.8rem 2rem; /* Slightly larger padding for prominence */
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px var(--card-shadow);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px var(--card-shadow);
+    }
+    .card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
+      color: var(--fg);
+      transition: color 0.3s ease;
+    }
+    .card p {
+      flex-grow: 1;
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      color: var(--fg); /* Use foreground color for better dark mode compatibility */
+      opacity: 0.8; /* Slightly reduce opacity for descriptions */
+      transition: color 0.3s ease;
+    }
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .btn {
+      display: block; /* Default to block for buttons inside card groups */
+      background: var(--accent);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: background 0.2s, transform 0.1s, color 0.3s ease;
+    }
+    .btn:hover {
+      background: #e04444; /* A slightly darker shade of red for hover in light mode */
+      transform: translateY(-1px);
+    }
+    html.dark .btn:hover {
+        background: #8e44ad; /* A slightly darker shade of purple for hover in dark mode */
+    }
+
+    @media (min-width: 640px) {
+        .btn-group {
+            flex-direction: row;
+        }
+        .btn {
+            flex: 1;
+        }
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--fg);
+      transition: color 0.3s ease;
+    }
+    footer a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    footer a:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Dyal Rustin</h1>
+    <p>🎨 Creator • 💻 Coder • 📷 Explorer</p>
+    <a href="https://github.com/dyal96" class="btn">GitHub Profile</a>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <span id="theme-icon">☀️</span> Toggle Theme
+    </button>
+  </header>
+
+  <main class="grid">
+    <!-- Tool Card: YouTube Video Downloader -->
+    <div class="card">
+      <h3>YouTube Video Downloader</h3>
+      <p>Quickly grab any YouTube video via yt-dlp, wrapped in a simple UI.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/YouTube_Video_Downloader" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/YouTube_Video_Downloader" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: YouTube Thumbnail Downloader -->
+    <div class="card">
+      <h3>YouTube Thumbnail Downloader</h3>
+      <p>Download HD thumbnails for any YouTube video in one click.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/YouTube-Thumbnail-Downloader" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/YouTube-Thumbnail-Downloader" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: Content Calendar -->
+    <div class="card">
+      <h3>Content Calendar</h3>
+      <p>Offline-first calendar to schedule and color-code content tasks in your browser.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/Content-Calendar" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/Content-Calendar" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: YouTube Tags Generator -->
+    <div class="card">
+      <h3>YouTube Tags Generator</h3>
+      <p>Smart SEO tool that suggests, rates and optimizes YouTube tags without any backend.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/YouTube-Tags" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/YouTube-Tags" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: Quick To-Do Planner -->
+    <div class="card">
+      <h3>Quick To-Do Planner</h3>
+      <p>Collection of minimal kanban & to-do planners—offline, zero-config.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/todo" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/todo" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: Base64 Encoder / Decoder -->
+    <div class="card">
+      <h3>Base64 Encoder / Decoder</h3>
+      <p>Simple client-side utility to encode or decode Base64 strings instantly.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/base64" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/base64" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- Tool Card: Unicode Font Converter -->
+    <div class="card">
+      <h3>Unicode Font Converter</h3>
+      <p>Convert legacy Hindi fonts (4C Gandhi, Chanakya, Kruti Dev) to Unicode and back.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/unicode-converter" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/unicode-converter" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+
+    <!-- NEW Tool Card: Pastel Gradient Generator -->
+    <div class="card">
+      <h3>Pastel Gradient Generator</h3>
+      <p>Generate beautiful, soft pastel color gradients for your designs.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/pastel-gradient-generator" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/pastel-gradient-generator" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+	
+	<!-- NEW Tool Card: Pastel Gradient Generator -->
+    <div class="card">
+      <h3>Pastel Gradient Generator</h3>
+      <p>Generate beautiful, soft pastel color gradients for your designs.</p>
+      <div class="btn-group">
+        <a class="btn" href="https://github.com/dyal96/pastel-gradient-generator" target="_blank">Open Repo</a>
+        <a class="btn" href="https://dyal96.github.io/pastel-gradient-generator" target="_blank">Visit Tool</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Made with ❤️ by <a href="https://github.com/dyal96">Dyal96</a>
+  </footer>
+
+  <script>
+    // Function to set the theme based on localStorage or system preference
+    function setTheme(theme) {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '🌙'; // Moon icon for dark mode
+        localStorage.setItem('theme', 'dark');
+      } else {
+        html.classList.remove('dark');
+        themeIcon.textContent = '☀️'; // Sun icon for light mode
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    // Function to toggle the theme
+    function toggleTheme() {
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark') {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    }
+
+    // Apply theme on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        setTheme(savedTheme);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Check system preference if no theme is saved
+        setTheme('dark');
+      } else {
+        setTheme('light'); // Default to light theme
+      }
+    });
+  </script>
+</body>
+</html>
