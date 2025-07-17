@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Previewer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Marked.js CDN for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Custom font for a clean look */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        /* Basic styling for the rendered Markdown to make it readable */
+        .markdown-output h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+            padding-bottom: 0.5rem;
+        }
+        .markdown-output h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .markdown-output h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .markdown-output p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .markdown-output ul, .markdown-output ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            list-style-position: outside;
+        }
+        .markdown-output ul {
+            list-style-type: disc;
+        }
+        .markdown-output ol {
+            list-style-type: decimal;
+        }
+        .markdown-output pre {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            padding: 1rem;
+            border-radius: 0.5rem; /* rounded-md */
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .markdown-output code {
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            background-color: #e5e7eb; /* bg-gray-200 */
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+        }
+        .markdown-output pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+        .markdown-output blockquote {
+            border-left: 4px solid #9ca3af; /* border-l-4 border-gray-400 */
+            padding-left: 1rem;
+            color: #4b5563; /* text-gray-600 */
+            margin-bottom: 1rem;
+        }
+        .markdown-output table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .markdown-output th, .markdown-output td {
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .markdown-output th {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            font-weight: bold;
+        }
+        .markdown-output img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-output a {
+            color: #2563eb; /* text-blue-600 */
+            text-decoration: underline;
+        }
+        /* Toolbar button styling */
+        .toolbar-btn {
+            @apply bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold py-1 px-3 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75;
+        }
+        .toolbar-btn:disabled {
+            @apply bg-gray-100 text-gray-400 cursor-not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-between p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-6xl mb-auto"> <!-- Increased max-width for more space -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Markdown Previewer for GitHub READMEs</h1>
+
+        <div class="flex flex-col md:flex-row gap-6 mb-6"> <!-- Flex container for side-by-side areas -->
+            <div class="w-full md:w-1/2"> <!-- Markdown Input column -->
+                <label for="markdownInput" class="block text-gray-700 text-sm font-semibold mb-2">
+                    Markdown Input:
+                </label>
+                <!-- Toolbar for Markdown formatting -->
+                <div id="toolbar" class="flex flex-wrap gap-2 mb-2 p-2 bg-gray-50 rounded-md border border-gray-200">
+                    <button id="boldBtn" class="toolbar-btn font-bold">B</button>
+                    <button id="italicBtn" class="toolbar-btn italic">I</button>
+                    <button id="h1Btn" class="toolbar-btn font-bold">H1</button>
+                    <button id="h2Btn" class="toolbar-btn font-bold">H2</button>
+                    <button id="h3Btn" class="toolbar-btn font-bold">H3</button>
+                    <button id="blockquoteBtn" class="toolbar-btn">" Blockquote</button>
+                    <button id="ulBtn" class="toolbar-btn">• List</button>
+                    <button id="olBtn" class="toolbar-btn">1. List</button>
+                    <button id="inlineCodeBtn" class="toolbar-btn font-mono">` Inline Code</button>
+                    <button id="fencedCodeBtn" class="toolbar-btn">``` Code Block</button>
+                    <button id="hrBtn" class="toolbar-btn">--- HR</button>
+                    <button id="linkBtn" class="toolbar-btn">🔗 Link</button>
+                    <button id="imageBtn" class="toolbar-btn">🖼️ Image</button>
+                    <button id="tableBtn" class="toolbar-btn">▦ Table</button>
+                    <button id="strikethroughBtn" class="toolbar-btn">S̶ Strikethrough</button>
+                    <button id="highlightBtn" class="toolbar-btn">💡 Highlight</button>
+                    <button id="subscriptBtn" class="toolbar-btn">X~2~ Subscript</button>
+                    <button id="superscriptBtn" class="toolbar-btn">X^2^ Superscript</button>
+                    <button id="taskListBtn" class="toolbar-btn">✅ Task List</button>
+                    <button id="undoBtn" class="toolbar-btn" disabled>↩️ Undo</button>
+                    <button id="normalizeTextBtn" class="toolbar-btn">📏 Normalize Text</button>
+                    <button id="clearAllBtn" class="toolbar-btn bg-red-500 hover:bg-red-600 text-white">✖️ Clear All</button>
+                </div>
+                <textarea
+                    id="markdownInput"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out resize-y overflow-hidden"
+                    placeholder="Start typing your Markdown here..."
+                ></textarea>
+            </div>
+
+            <div class="w-full md:w-1/2"> <!-- HTML Preview column -->
+                <label for="previewOutput" class="block text-gray-700 text-sm font-semibold mb-2">
+                    HTML Preview:
+                </label>
+                <div
+                    id="previewOutput"
+                    class="w-full p-3 border border-gray-300 rounded-md bg-white overflow-auto resize-y min-h-[400px] markdown-output"
+                >
+                    <!-- Markdown will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-8 text-center text-gray-600 text-sm">
+        Made with ❤️ by <a href="[https://github.com/dyal96](https://github.com/dyal96)" target="_blank" class="text-blue-600 hover:underline">dyal96</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const markdownInput = document.getElementById('markdownInput');
+            const previewOutput = document.getElementById('previewOutput');
+
+            // Configure marked.js to support GitHub Flavored Markdown (GFM)
+            marked.setOptions({
+                gfm: true, // Enable GFM for tables, strikethrough, task lists, etc.
+                breaks: true // Render GitHub-style line breaks (newlines become <br>)
+            });
+
+            // Get toolbar buttons
+            const boldBtn = document.getElementById('boldBtn');
+            const italicBtn = document.getElementById('italicBtn');
+            const h1Btn = document.getElementById('h1Btn');
+            const h2Btn = document.getElementById('h2Btn');
+            const h3Btn = document.getElementById('h3Btn');
+            const blockquoteBtn = document.getElementById('blockquoteBtn');
+            const ulBtn = document.getElementById('ulBtn');
+            const olBtn = document.getElementById('olBtn');
+            const inlineCodeBtn = document.getElementById('inlineCodeBtn');
+            const fencedCodeBtn = document.getElementById('fencedCodeBtn');
+            const hrBtn = document.getElementById('hrBtn');
+            const linkBtn = document.getElementById('linkBtn');
+            const imageBtn = document.getElementById('imageBtn');
+            const tableBtn = document.getElementById('tableBtn');
+            const strikethroughBtn = document.getElementById('strikethroughBtn');
+            const highlightBtn = document.getElementById('highlightBtn');
+            const subscriptBtn = document.getElementById('subscriptBtn');
+            const superscriptBtn = document.getElementById('superscriptBtn');
+            const taskListBtn = document.getElementById('taskListBtn');
+            const undoBtn = document.getElementById('undoBtn');
+            const normalizeTextBtn = document.getElementById('normalizeTextBtn');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+
+            // History for Undo functionality
+            let history = [];
+            let historyIndex = -1;
+            const maxHistory = 50; // Max number of states to keep in history
+
+            /**
+             * Saves the current state of the markdownInput to history.
+             * Prevents saving duplicate consecutive states.
+             */
+            function saveHistory() {
+                const currentValue = markdownInput.value;
+                if (history.length > 0 && history[historyIndex] === currentValue) {
+                    return; // Don't save if content hasn't changed from the last state
+                }
+                // If we've undone, truncate history to the current point before adding new state
+                if (historyIndex < history.length - 1) {
+                    history = history.slice(0, historyIndex + 1);
+                }
+                // Limit history size
+                if (history.length === maxHistory) {
+                    history.shift(); // Remove the oldest entry
+                }
+                history.push(currentValue);
+                historyIndex = history.length - 1;
+                updateUndoRedoButtons();
+            }
+
+            /**
+             * Updates the disabled state of the Undo button.
+             */
+            function updateUndoRedoButtons() {
+                undoBtn.disabled = historyIndex <= 0;
+                // If a redo button were implemented, its state would be updated here too.
+            }
+
+            /**
+             * Dynamically resizes a textarea to fit its content.
+             * @param {HTMLTextAreaElement} textarea - The textarea element to resize.
+             */
+            function autoResizeTextarea(textarea) {
+                textarea.style.height = 'auto'; // Reset height to recalculate
+                textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height to scrollHeight
+            }
+
+            /**
+             * Applies Markdown formatting to the selected text or at the cursor position.
+             * @param {string} syntaxBefore - The Markdown syntax to insert before the text.
+             * @param {string} syntaxAfter - The Markdown syntax to insert after the text.
+             * @param {string} placeholderText - Text to insert if no selection.
+             */
+            function applyFormatting(syntaxBefore, syntaxAfter, placeholderText = '') {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const selectedText = markdownInput.value.substring(start, end);
+                const currentValue = markdownInput.value;
+
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                if (selectedText) {
+                    // Wrap selected text with formatting
+                    newText = currentValue.substring(0, start) + syntaxBefore + selectedText + syntaxAfter + currentValue.substring(end);
+                    newCursorStart = start + syntaxBefore.length;
+                    newCursorEnd = end + syntaxBefore.length;
+                } else {
+                    // Insert placeholder and formatting, place cursor in between
+                    newText = currentValue.substring(0, start) + syntaxBefore + placeholderText + syntaxAfter + currentValue.substring(end);
+                    newCursorStart = start + syntaxBefore.length;
+                    newCursorEnd = newCursorStart + placeholderText.length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus(); // Keep focus on the textarea
+
+                // Trigger input event to update the preview and save history
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Applies line-based Markdown formatting (like blockquote, lists) to selected text.
+             * Prefixes each line of the selection.
+             * @param {string} prefix - The prefix to add to each line (e.g., '> ', '- ', '1. ').
+             * @param {string} placeholderText - Text to insert if no selection.
+             * @param {string} listType - 'ordered' or 'unordered' for list numbering.
+             */
+            function applyLinePrefixFormatting(prefix, placeholderText = '', listType = '') {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const currentValue = markdownInput.value;
+
+                let lines;
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                // Find the start of the current line for accurate prefixing
+                const lineStart = currentValue.lastIndexOf('\n', start - 1) + 1;
+                const lineEnd = currentValue.indexOf('\n', end);
+                const selectedBlock = currentValue.substring(lineStart, (lineEnd === -1 ? currentValue.length : lineEnd));
+
+                if (start === end) { // No selection, insert placeholder
+                    newText = currentValue.substring(0, start) + prefix + placeholderText + currentValue.substring(end);
+                    newCursorStart = start + prefix.length;
+                    newCursorEnd = newCursorStart + placeholderText.length;
+                } else { // Selection exists
+                    lines = selectedBlock.split('\n');
+                    let prefixedLines = [];
+                    let currentNumber = 1;
+                    for (let i = 0; i < lines.length; i++) {
+                        if (listType === 'ordered') {
+                            prefixedLines.push(`${currentNumber}. ${lines[i]}`);
+                            currentNumber++;
+                        } else {
+                            prefixedLines.push(prefix + lines[i]);
+                        }
+                    }
+                    newText = currentValue.substring(0, lineStart) + prefixedLines.join('\n') + currentValue.substring((lineEnd === -1 ? currentValue.length : lineEnd));
+                    newCursorStart = lineStart;
+                    newCursorEnd = lineStart + prefixedLines.join('\n').length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+
+            /**
+             * Applies Markdown link formatting specifically, handling cursor placement.
+             */
+            function applyLinkFormatting() {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const selectedText = markdownInput.value.substring(start, end);
+                const currentValue = markdownInput.value;
+
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                const linkPlaceholder = 'https://example.com';
+                const textPlaceholder = 'Link Text';
+
+                if (selectedText) {
+                    // If text is selected, wrap it and place cursor inside the URL part
+                    newText = currentValue.substring(0, start) + '[' + selectedText + '](' + linkPlaceholder + ')' + currentValue.substring(end);
+                    // Cursor should be inside the URL part: after '](', before ')'
+                    newCursorStart = start + selectedText.length + 3; // +3 for '](', points to start of URL
+                    newCursorEnd = newCursorStart + linkPlaceholder.length;
+                } else {
+                    // If no text selected, insert full link syntax and place cursor on textPlaceholder
+                    newText = currentValue.substring(0, start) + '[' + textPlaceholder + '](' + linkPlaceholder + ')' + currentValue.substring(end);
+                    // Cursor should be inside the text part: after '[', before ']'
+                    newCursorStart = start + 1; // +1 for '['
+                    newCursorEnd = newCursorStart + textPlaceholder.length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Applies Markdown image formatting.
+             */
+            function applyImageFormatting() {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const currentValue = markdownInput.value;
+
+                const altTextPlaceholder = 'alt text';
+                const imageUrlPlaceholder = 'https://placehold.co/150x100/ADD8E6/000000?text=Image'; // Using a placeholder image URL
+
+                const newText = currentValue.substring(0, start) + '![' + altTextPlaceholder + '](' + imageUrlPlaceholder + ')' + currentValue.substring(end);
+                const newCursorStart = start + 2; // After ![
+                const newCursorEnd = newCursorStart + altTextPlaceholder.length;
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Applies Markdown fenced code block formatting.
+             */
+            function applyFencedCodeBlockFormatting() {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const selectedText = markdownInput.value.substring(start, end);
+                const currentValue = markdownInput.value;
+
+                const codePlaceholder = 'console.log("Hello World!");';
+                const languagePlaceholder = 'javascript';
+
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                if (selectedText) {
+                    newText = currentValue.substring(0, start) + '```' + languagePlaceholder + '\n' + selectedText + '\n```' + currentValue.substring(end);
+                    newCursorStart = start + 3; // After first ```
+                    newCursorEnd = newCursorStart + languagePlaceholder.length;
+                } else {
+                    newText = currentValue.substring(0, start) + '```' + languagePlaceholder + '\n' + codePlaceholder + '\n```' + currentValue.substring(end);
+                    newCursorStart = start + 3; // After first ```
+                    newCursorEnd = newCursorStart + languagePlaceholder.length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Applies Markdown table formatting.
+             */
+            function applyTableFormatting() {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const currentValue = markdownInput.value;
+
+                const tableTemplate = `
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+`;
+                const newText = currentValue.substring(0, start) + tableTemplate + currentValue.substring(end);
+                const newCursorStart = start + tableTemplate.indexOf('Header 1');
+                const newCursorEnd = newCursorStart + 'Header 1'.length;
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Applies Markdown task list formatting.
+             */
+            function applyTaskListFormatting() {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const currentValue = markdownInput.value;
+
+                const taskListTemplate = `- [ ] Task 1\n- [ ] Task 2`;
+
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                if (start === end) { // No selection, insert template
+                    newText = currentValue.substring(0, start) + taskListTemplate + currentValue.substring(end);
+                    newCursorStart = start + taskListTemplate.indexOf('Task 1');
+                    newCursorEnd = newCursorStart + 'Task 1'.length;
+                } else { // Selection exists, convert selected lines to task list items
+                    const lines = currentValue.substring(start, end).split('\n');
+                    const prefixedLines = lines.map(line => `- [ ] ${line.trim()}`);
+                    newText = currentValue.substring(0, start) + prefixedLines.join('\n') + currentValue.substring(end);
+                    newCursorStart = start;
+                    newCursorEnd = start + prefixedLines.join('\n').length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input'));
+            }
+
+            /**
+             * Removes common Markdown syntax from the selected text or the entire input,
+             * and normalizes spaces and newlines to a single line.
+             * @param {string} text - The input text (or selected part) to normalize.
+             * @returns {string} The normalized plain text.
+             */
+            function formatToNormalText(text) {
+                let cleanedText = text;
+
+                // Remove bold and italic markers: **text**, *text*, __text__, _text_
+                cleanedText = cleanedText.replace(/(\*\*|__)(.*?)\1/g, '$2');
+                cleanedText = cleanedText.replace(/(\*|_)(.*?)\1/g, '$2');
+
+                // Remove headings: # Heading
+                cleanedText = cleanedText.replace(/^#{1,6}\s*(.*)$/gm, '$1');
+
+                // Remove blockquote markers: > blockquote
+                cleanedText = cleanedText.replace(/^>\s*(.*)$/gm, '$1');
+
+                // Remove inline code backticks: `code`
+                cleanedText = cleanedText.replace(/`([^`]+)`/g, '$1');
+
+                // Remove fenced code blocks (keep content, remove fences): ```lang\ncode\n```
+                cleanedText = cleanedText.replace(/```(?:\w+)?\n([\s\S]*?)\n```/g, '$1');
+
+                // Remove horizontal rules: ---, ***, ___
+                cleanedText = cleanedText.replace(/^(---|\*\*\*|___)\s*$/gm, '');
+
+                // Remove links (keep link text): [title](url)
+                cleanedText = cleanedText.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1');
+
+                // Remove images (keep alt text): ![alt text](url)
+                cleanedText = cleanedText.replace(/!\[([^\]]+)\]\([^\)]+\)/g, '$1');
+
+                // Remove strikethrough: ~~text~~
+                cleanedText = cleanedText.replace(/~~(.*?)~~/g, '$1');
+
+                // Remove highlight: ==text==
+                cleanedText = cleanedText.replace(/==(.*?)==/g, '$1');
+
+                // Remove subscript/superscript: H~2~O, X^2^
+                cleanedText = cleanedText.replace(/~([^~]+)~/g, '$1'); // Subscript
+                cleanedText = cleanedText.replace(/\^([^^]+)\^/g, '$1'); // Superscript
+
+                // Remove list item markers (unordered and ordered): - item, 1. item
+                cleanedText = cleanedText.replace(/^(\s*[-*+]|\s*\d+\.)\s*(.*)$/gm, '$2');
+
+                // Remove task list checkboxes: - [ ] Task, - [x] Task
+                cleanedText = cleanedText.replace(/^- \[(x| )\]\s*(.*)$/gm, '$2');
+
+                // Replace all newlines with a single space
+                cleanedText = cleanedText.replace(/(\r\n|\n|\r)/g, ' ');
+
+                // Collapse multiple spaces into single spaces
+                cleanedText = cleanedText.replace(/ {2,}/g, ' ');
+
+                // Trim leading/trailing whitespace from the entire text
+                cleanedText = cleanedText.trim();
+
+                return cleanedText;
+            }
+
+
+            // Event Listeners for toolbar buttons
+            boldBtn.addEventListener('click', () => applyFormatting('**', '**', 'bold text'));
+            italicBtn.addEventListener('click', () => applyFormatting('*', '*', 'italic text'));
+            h1Btn.addEventListener('click', () => applyFormatting('# ', '', 'Heading 1'));
+            h2Btn.addEventListener('click', () => applyFormatting('## ', '', 'Heading 2'));
+            h3Btn.addEventListener('click', () => applyFormatting('### ', '', 'Heading 3'));
+            blockquoteBtn.addEventListener('click', () => applyLinePrefixFormatting('> ', 'blockquote text'));
+            ulBtn.addEventListener('click', () => applyLinePrefixFormatting('- ', 'List item', 'unordered'));
+            olBtn.addEventListener('click', () => applyLinePrefixFormatting('1. ', 'List item', 'ordered'));
+            inlineCodeBtn.addEventListener('click', () => applyFormatting('`', '`', 'code'));
+            fencedCodeBtn.addEventListener('click', applyFencedCodeBlockFormatting);
+            hrBtn.addEventListener('click', () => applyFormatting('\n\n---\n\n', '', '')); // Insert HR on new lines
+            linkBtn.addEventListener('click', applyLinkFormatting);
+            imageBtn.addEventListener('click', applyImageFormatting);
+            tableBtn.addEventListener('click', applyTableFormatting);
+            strikethroughBtn.addEventListener('click', () => applyFormatting('~~', '~~', 'strikethrough text'));
+            highlightBtn.addEventListener('click', () => applyFormatting('==', '==', 'highlighted text'));
+            subscriptBtn.addEventListener('click', () => applyFormatting('~', '~', 'subscript text'));
+            superscriptBtn.addEventListener('click', () => applyFormatting('^', '^', 'superscript text'));
+            taskListBtn.addEventListener('click', applyTaskListFormatting);
+
+            // Undo button
+            undoBtn.addEventListener('click', () => {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    markdownInput.value = history[historyIndex];
+                    // Manually trigger input event to update preview without saving new history state
+                    markdownInput.dispatchEvent(new Event('input'));
+                    updateUndoRedoButtons();
+                    autoResizeTextarea(markdownInput); // Auto-resize after undo
+                }
+            });
+
+            // Normalize Text button
+            normalizeTextBtn.addEventListener('click', () => {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const currentValue = markdownInput.value;
+
+                let textToNormalize;
+                let newText;
+                let newCursorStart;
+                let newCursorEnd;
+
+                if (start !== end) { // If text is selected
+                    textToNormalize = currentValue.substring(start, end);
+                    const normalizedSelectedText = formatToNormalText(textToNormalize);
+                    newText = currentValue.substring(0, start) + normalizedSelectedText + currentValue.substring(end);
+                    newCursorStart = start;
+                    newCursorEnd = start + normalizedSelectedText.length;
+                } else { // No selection, normalize entire content
+                    textToNormalize = currentValue;
+                    newText = formatToNormalText(textToNormalize);
+                    newCursorStart = 0;
+                    newCursorEnd = newText.length;
+                }
+
+                markdownInput.value = newText;
+                markdownInput.selectionStart = newCursorStart;
+                markdownInput.selectionEnd = newCursorEnd;
+                markdownInput.focus();
+                markdownInput.dispatchEvent(new Event('input')); // Trigger preview and history save
+                autoResizeTextarea(markdownInput); // Auto-resize after normalization
+            });
+
+            // Clear All button
+            clearAllBtn.addEventListener('click', () => {
+                markdownInput.value = '';
+                previewOutput.innerHTML = '';
+                history = [];
+                historyIndex = -1;
+                updateUndoRedoButtons();
+                autoResizeTextarea(markdownInput);
+                markdownInput.focus();
+            });
+
+
+            // Initial load and save history
+            // Removed initial markdown content from textarea HTML
+            previewOutput.innerHTML = marked.parse(markdownInput.value); // Render empty initially
+            saveHistory(); // Save the initial empty state
+            autoResizeTextarea(markdownInput); // Initial auto-resize
+
+            // Listen for input changes and update the preview and history
+            markdownInput.addEventListener('input', () => {
+                const markdownText = markdownInput.value;
+                previewOutput.innerHTML = marked.parse(markdownText);
+                saveHistory(); // Save state on every input
+                autoResizeTextarea(markdownInput); // Auto-resize on every input
+            });
+        });
+    </script>
+</body>
+</html>
