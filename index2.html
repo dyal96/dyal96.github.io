@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyal's Tools Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Light Mode (Default Pastel Theme) */
+        :root {
+            --bg-start: #e0f7fa; /* Light cyan */
+            --bg-end: #e8f5e9;   /* Light mint green */
+            --fg: #333;
+            --accent: #ff5c5c; /* Original red accent */
+            --card: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.06);
+            /* text-gradient-start and end are only for dark mode h1 */
+        }
+
+        /* Dark Mode */
+        html.dark {
+            --bg-start: #2c3e50; /* Dark blue-gray */
+            --bg-end: #34495e;   /* Slightly darker blue-gray */
+            --fg: #ecf0f1; /* Light gray */
+            --accent: #9b59b6; /* Purple */
+            --card: #3b506b; /* Darker card background */
+            --card-shadow: rgba(0, 0, 0, 0.2);
+            --text-gradient-start: #bdc3c7; /* Lighter gray for dark mode title */
+            --text-gradient-end: #95a5a6;   /* Medium gray for dark mode title */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, var(--bg-start), var(--bg-end));
+            color: var(--fg);
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Allow content to stack and footer to be at bottom */
+            justify-content: flex-start; /* Align content to top for better scroll */
+            align-items: center;
+            transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: var(--card); /* Use card variable for consistency */
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px var(--card-shadow); /* Use card-shadow variable */
+            padding: 2.5rem;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .profile-info {
+            text-align: center;
+            margin-bottom: 2rem; /* Space below profile info */
+            color: var(--fg);
+            transition: color 0.3s ease;
+        }
+        .profile-info h1 {
+            font-size: 2.5rem; /* Slightly smaller for profile name */
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--fg); /* Ensure text is black in light mode */
+            transition: color 0.3s ease;
+            /* No gradient for h1 in light mode */
+        }
+        html.dark .profile-info h1 {
+            background-image: linear-gradient(to right, var(--text-gradient-start), var(--text-gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent; /* Make text transparent to show gradient */
+            transition: background-image 0.3s ease;
+        }
+        .profile-info p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            color: var(--fg);
+            transition: color 0.3s ease;
+        }
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .search-bar input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.75rem 1.25rem;
+            border: 2px solid #cbd5e0; /* Light border */
+            border-radius: 9999px; /* Fully rounded */
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            background-color: var(--card); /* Ensure input background changes with theme */
+            color: var(--fg); /* Ensure input text color changes with theme */
+        }
+        .search-bar input:focus {
+            border-color: var(--accent); /* Use accent color on focus */
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2); /* Keep a consistent blue glow for focus */
+        }
+        .overall-heading {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--fg); /* Use foreground color */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #edf2f7; /* Keep subtle underline */
+            transition: color 0.3s ease;
+        }
+        .category-section {
+            margin-bottom: 2.5rem;
+        }
+        .category-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--fg); /* Use foreground color */
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #edf2f7; /* Subtle underline */
+            padding-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .tool-card {
+            background-color: var(--card); /* Use card variable */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px var(--card-shadow); /* Use card-shadow variable */
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--card-shadow);
+        }
+        .tool-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--fg); /* Use foreground color */
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        .tool-card p {
+            font-size: 0.95rem;
+            color: var(--fg); /* Use foreground color */
+            opacity: 0.8; /* Slightly reduce opacity for descriptions */
+            margin-bottom: 1rem;
+            flex-grow: 1;
+            transition: color 0.3s ease;
+        }
+        .tool-card .btn-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            gap: 0.75rem;
+            margin-top: 1rem; /* Space above buttons */
+        }
+        .tool-card .btn {
+            flex: 1; /* Distribute space evenly */
+            min-width: 120px; /* Minimum width for buttons */
+            background-color: var(--accent); /* Use accent variable */
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 3px 8px rgba(255, 92, 92, 0.3); /* Keep red shadow for light mode accent */
+        }
+        .tool-card .btn:hover {
+            background-color: #e04444; /* Darker red on hover for light mode */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(255, 92, 92, 0.5);
+        }
+        html.dark .tool-card .btn {
+            box-shadow: 0 3px 8px rgba(155, 89, 182, 0.3); /* Purple shadow for dark mode accent */
+        }
+        html.dark .tool-card .btn:hover {
+            background-color: #8e44ad; /* Darker purple on hover for dark mode */
+            box-shadow: 0 5px 12px rgba(155, 89, 182, 0.5);
+        }
+
+        /* Styling for the theme toggle button */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px var(--card-shadow);
+        }
+        .theme-toggle-btn:hover {
+            background: var(--accent);
+            color: var(--card);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 768px) {
+            .theme-toggle-btn {
+                position: static; /* Position normally on smaller screens */
+                margin-top: 1rem;
+                display: inline-block;
+            }
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--fg); /* Use foreground color */
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        footer a {
+            color: var(--accent); /* Use accent variable */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            .profile-info h1 {
+                font-size: 2rem;
+            }
+            .profile-info p {
+                font-size: 1rem;
+            }
+            .search-bar input {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+            .overall-heading {
+                font-size: 1.8rem;
+            }
+            .category-section h2 {
+                font-size: 1.75rem;
+            }
+            .tools-grid {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+            .tool-card .btn-group {
+                flex-direction: column; /* Stack buttons vertically */
+            }
+            .tool-card .btn {
+                min-width: unset; /* Remove min-width constraint */
+                width: 100%; /* Full width buttons */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-info">
+                <h1>Dyal Rustin</h1>
+                <p>🎨 Creator • 💻 Coder • 📷 Explorer</p>
+            </div>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">☀️</span> Toggle Theme
+            </button>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" id="toolSearch" onkeyup="filterTools()" placeholder="Search for tools...">
+        </div>
+
+        <h2 class="overall-heading">All the tools in place (approx 500) and more!</h2>
+
+        <!-- Text & Content Utilities -->
+        <div class="category-section" id="text-content-category">
+            <h2>Text & Content Utilities</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="markdown previewer editor text">
+                    <h3>Markdown Previewer</h3>
+                    <p>Type Markdown on one side, see the rendered HTML on the other.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/markdown-previewer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="base64 encoder decoder converter text">
+                    <h3>Base64 Encoder / Decoder</h3>
+                    <p>Encode or decode Base64 strings instantly.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/base64" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="url encoder decoder text web">
+                    <h3>URL Encoder / Decoder</h3>
+                    <p>Quickly encode or decode URL components.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/url-encoder-decoder" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="html entity encoder decoder text web">
+                    <h3>HTML Entity Encoder / Decoder</h3>
+                    <p>Convert special characters to and from HTML entities.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/html-entity-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="case converter text uppercase lowercase title snake camel kebab">
+                    <h3>Case Converter</h3>
+                    <p>Convert text to various cases (uppercase, lowercase, title case, etc.).</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/case-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="word character line counter text statistics">
+                    <h3>Word/Character/Line Counter</h3>
+                    <p>Count words, characters, and lines in any text input.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/text-counter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="text diff compare tool">
+                    <h3>Text Diff Tool</h3>
+                    <p>Compare two blocks of text to highlight differences.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/text-diff" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="line sorter deduplicator text unique">
+                    <h3>Line Sorter & Deduplicator</h3>
+                    <p>Sort lines alphabetically and remove duplicate entries.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/line-sorter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="text reverser string">
+                    <h3>Text Reverser</h3>
+                    <p>Reverse the order of characters in a text string.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/text-reverser" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="lorem ipsum generator dummy text">
+                    <h3>Lorem Ipsum Generator</h3>
+                    <p>Generate placeholder text for design and development.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/lorem-ipsum-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="notepad notes editor local storage">
+                    <h3>Simple Notepad</h3>
+                    <p>A basic text editor that saves notes directly to your browser's local storage.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/simple-notepad" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="journal diary app notes local storage">
+                    <h3>Journal/Diary App</h3>
+                    <p>Keep a personal journal with entries saved locally in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/journal-app" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="readability score calculator text analysis">
+                    <h3>Readability Score Calculator</h3>
+                    <p>Analyze text readability using metrics like Flesch-Kincaid.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/readability-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="text ascii art converter">
+                    <h3>Text to ASCII Art Converter</h3>
+                    <p>Transform plain text into creative ASCII art designs.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/ascii-art-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="simple translator dictionary language">
+                    <h3>Simple Translator</h3>
+                    <p>Translate words or phrases using a bundled dictionary (limited functionality offline).</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/simple-translator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="code snippet storage syntax highlighting">
+                    <h3>Code Snippet Storage</h3>
+                    <p>Save and organize your code snippets with basic syntax highlighting.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/code-snippet-storage" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="regular expression regex tester">
+                    <h3>Regular Expression Tester</h3>
+                    <p>Test and validate regular expressions against sample text.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/regex-tester" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="csv json converter data">
+                    <h3>CSV to JSON Converter</h3>
+                    <p>Convert Comma Separated Values (CSV) data into JSON format.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/csv-to-json" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="json formatter validator data">
+                    <h3>JSON Formatter/Validator</h3>
+                    <p>Format and validate JSON data for readability and correctness.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/json-formatter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="xml formatter validator data">
+                    <h3>XML Formatter/Validator</h3>
+                    <p>Format and validate XML data for readability and correctness.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/xml-formatter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design & Color Tools -->
+        <div class="category-section" id="design-color-category">
+            <h2>Design & Color Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="color palette generator gradient design">
+                    <h3>Color Palette Generator</h3>
+                    <p>Generate beautiful color palettes based on random choice, hex input, or color theories.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/color-palette-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="color converter hex rgb hsl cmyk">
+                    <h3>Color Converter</h3>
+                    <p>Convert color codes between Hex, RGB, HSL, and CMYK formats.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/color-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="gradient generator css design">
+                    <h3>Gradient Generator</h3>
+                    <p>Create custom CSS linear and radial gradients visually.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/gradient-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="shadow generator css box text">
+                    <h3>Shadow Generator</h3>
+                    <p>Generate CSS `box-shadow` and `text-shadow` properties with visual controls.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/shadow-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="border radius generator css">
+                    <h3>Border-Radius Generator</h3>
+                    <p>Visually create complex CSS `border-radius` shapes.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/border-radius-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="css unit converter px em rem vw vh">
+                    <h3>CSS Unit Converter</h3>
+                    <p>Convert CSS units between pixels, ems, rems, viewport units, and more.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/css-unit-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="flexbox playground visualizer css">
+                    <h3>Flexbox Playground</h3>
+                    <p>Visualize and experiment with CSS Flexbox properties interactively.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/flexbox-playground" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="css grid layout generator design">
+                    <h3>CSS Grid Layout Generator</h3>
+                    <p>Visually design and generate CSS Grid layouts.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/css-grid-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="svg path editor shapes graphics">
+                    <h3>SVG Path Editor (Basic)</h3>
+                    <p>Create and modify simple SVG path shapes.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/svg-path-editor" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="favicon generator image website icon">
+                    <h3>Favicon Generator</h3>
+                    <p>Generate favicons in various sizes from an uploaded image.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/favicon-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="image placeholder generator dummy image">
+                    <h3>Image Placeholder Generator</h3>
+                    <p>Generate placeholder images with custom dimensions and text.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/image-placeholder-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="icon library viewer font awesome">
+                    <h3>Simple Icon Library Viewer</h3>
+                    <p>Browse and copy code for a local collection of common icons.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/icon-library-viewer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="color contrast checker accessibility wcag">
+                    <h3>Color Contrast Checker</h3>
+                    <p>Check color contrast ratios for WCAG accessibility compliance.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/color-contrast-checker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="typographic scale calculator font typography">
+                    <h3>Typographic Scale Calculator</h3>
+                    <p>Calculate harmonious font sizes based on a chosen scale.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/typographic-scale-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="font pairings viewer typography design">
+                    <h3>Font Pairings Viewer</h3>
+                    <p>Explore and visualize different font combinations for design projects.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/font-pairings-viewer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productivity & Personal -->
+        <div class="category-section" id="productivity-personal-category">
+            <h2>Productivity & Personal</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="todo list planner local storage">
+                    <h3>To-Do List</h3>
+                    <p>Manage your tasks and to-do items, saved directly in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/todo-list" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="pomodoro timer focus productivity">
+                    <h3>Pomodoro Timer</h3>
+                    <p>Boost your productivity with timed work and break intervals.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/pomodoro-timer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="stopwatch timer time">
+                    <h3>Stopwatch</h3>
+                    <p>A simple and accurate stopwatch for timing activities.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/stopwatch" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="countdown timer time event">
+                    <h3>Countdown Timer</h3>
+                    <p>Set a countdown for any event or task.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/countdown-timer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="calculator math basic">
+                    <h3>Simple Calculator</h3>
+                    <p>Perform basic arithmetic operations quickly.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/simple-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="unit converter length weight temperature volume">
+                    <h3>Unit Converter</h3>
+                    <p>Convert between various units of measurement (length, weight, temperature, etc.).</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/unit-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="currency converter money finance">
+                    <h3>Currency Converter</h3>
+                    <p>Convert currencies with pre-bundled or manually updated exchange rates.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/currency-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="recipe organizer food cooking local storage">
+                    <h3>Recipe Organizer</h3>
+                    <p>Store and manage your favorite recipes, saved locally.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/recipe-organizer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="meal planner food diet">
+                    <h3>Meal Planner</h3>
+                    <p>Plan your meals for the week or month ahead.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/meal-planner" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="habit tracker goals self improvement">
+                    <h3>Habit Tracker</h3>
+                    <p>Track your daily habits and build consistent routines.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/habit-tracker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="expense tracker finance budget local storage">
+                    <h3>Expense Tracker</h3>
+                    <p>Record and monitor your daily expenses, saved locally.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/expense-tracker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="daily affirmation generator motivation inspiration">
+                    <h3>Daily Affirmation Generator</h3>
+                    <p>Get a dose of positive affirmations to start your day.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/affirmation-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="decision maker wheel random choice">
+                    <h3>Decision Maker</h3>
+                    <p>A simple tool to help you make choices (e.g., "Spin the Wheel").</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/decision-maker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="password generator security random">
+                    <h3>Password Generator</h3>
+                    <p>Generate strong, random passwords with customizable options.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/password-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="password strength checker security">
+                    <h3>Password Strength Checker</h3>
+                    <p>Assess the strength of your passwords.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/password-strength-checker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="contact book address local storage">
+                    <h3>Quick Contact Book</h3>
+                    <p>Store and manage your contacts locally in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/contact-book" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="simple calendar event notes date">
+                    <h3>Simple Calendar</h3>
+                    <p>A basic calendar to view dates and add simple event notes.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/simple-calendar" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="debt snowball avalanche calculator finance">
+                    <h3>Debt Snowball/Avalanche Calculator</h3>
+                    <p>Plan your debt repayment strategy with popular methods.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/debt-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="bmi calculator health fitness">
+                    <h3>BMI Calculator</h3>
+                    <p>Calculate your Body Mass Index to assess your weight status.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/bmi-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="retirement calculator finance planning">
+                    <h3>Retirement Calculator (Basic)</h3>
+                    <p>Estimate your retirement savings and future financial outlook.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/retirement-calculator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer & Utility -->
+        <div class="category-section" id="developer-utility-category">
+            <h2>Developer & Utility</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="hash generator md5 sha1 sha256 security">
+                    <h3>Hash Generator</h3>
+                    <p>Generate cryptographic hashes (MD5, SHA-1, SHA-256) for text.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/hash-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="uuid guid generator unique id">
+                    <h3>UUID/GUID Generator</h3>
+                    <p>Generate universally unique identifiers for various applications.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/uuid-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="qr code generator barcode">
+                    <h3>QR Code Generator</h3>
+                    <p>Create QR codes from text or URLs.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/qr-code-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="barcode generator">
+                    <h3>Barcode Generator</h3>
+                    <p>Generate various types of barcodes from input data.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/barcode-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="data uri converter base64 image file">
+                    <h3>Data URI Converter</h3>
+                    <p>Convert small files or images into Data URI strings.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/data-uri-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="network ip port checker">
+                    <h3>Network IP/Port Checker</h3>
+                    <p>Client-side tool to check basic network information and port status.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/network-checker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="regex cheatsheet regular expression">
+                    <h3>Regex Cheatsheet</h3>
+                    <p>A quick reference guide for common regular expression patterns.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/regex-cheatsheet" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="git cheatsheet version control">
+                    <h3>Git Cheatsheet</h3>
+                    <p>A handy reference for common Git commands.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/git-cheatsheet" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="html css js reference guide documentation">
+                    <h3>HTML/CSS/JS Reference Guide</h3>
+                    <p>Access basic syntax and property references offline.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/web-reference" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="ascii table viewer characters">
+                    <h3>ASCII Table Viewer</h3>
+                    <p>View the complete ASCII character table.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/ascii-table" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="unicode character picker symbols">
+                    <h3>Unicode Character Picker</h3>
+                    <p>Find and copy special Unicode characters and symbols.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/unicode-picker" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="epoch converter unix timestamp">
+                    <h3>Epoch Converter</h3>
+                    <p>Convert Unix timestamps to human-readable dates and vice versa.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/epoch-converter" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="cron job expression builder scheduler">
+                    <h3>Cron Job Expression Builder</h3>
+                    <p>Visually build and understand cron job expressions.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/cron-builder" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="htaccess generator web server">
+                    <h3>.htaccess Generator (Basic)</h3>
+                    <p>Generate common `.htaccess` rules for web server configurations.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/htaccess-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="robots txt generator seo web crawler">
+                    <h3>Robots.txt Generator</h3>
+                    <p>Create `robots.txt` files to control web crawler access.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/robots-txt-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="sitemap generator xml seo">
+                    <h3>Sitemap Generator (Basic)</h3>
+                    <p>Generate a basic XML sitemap structure for small websites.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/sitemap-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="url parser web address components">
+                    <h3>URL Parser</h3>
+                    <p>Break down a URL into its individual components (protocol, host, path, query, etc.).</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/url-parser" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="user agent string parser browser info">
+                    <h3>User Agent String Parser</h3>
+                    <p>Parse and understand the information contained in a User-Agent string.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/user-agent-parser" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="event keycode viewer javascript keyboard">
+                    <h3>Event Keycode Viewer</h3>
+                    <p>Press any key to see its corresponding JavaScript key code and event properties.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/keycode-viewer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="browser feature detector compatibility">
+                    <h3>Browser Feature Detector</h3>
+                    <p>Check for support of various HTML5 and CSS3 features in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/feature-detector" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education & Learning -->
+        <div class="category-section" id="education-learning-category">
+            <h2>Education & Learning</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="flashcard app study learning">
+                    <h3>Flashcard App</h3>
+                    <p>Create and review digital flashcards for effective learning.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/flashcard-app" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="typing test speed practice">
+                    <h3>Typing Test</h3>
+                    <p>Test and improve your typing speed and accuracy.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/typing-test" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="quiz creator player education">
+                    <h3>Quiz Creator/Player</h3>
+                    <p>Create simple quizzes or play pre-defined ones.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/quiz-app" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="simple math practice tool education">
+                    <h3>Simple Math Practice Tool</h3>
+                    <p>Practice basic arithmetic skills with customizable problems.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/math-practice" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="periodic table viewer chemistry elements">
+                    <h3>Periodic Table Viewer</h3>
+                    <p>Explore the elements of the periodic table with basic information.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/periodic-table" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="anatomy labeling quiz biology human body">
+                    <h3>Anatomy Labeling Quiz</h3>
+                    <p>Test your knowledge of human anatomy by labeling diagrams.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/anatomy-quiz" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="basic chemistry formula balancer equations">
+                    <h3>Basic Chemistry Formula Balancer</h3>
+                    <p>Balance simple chemical equations.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/chemistry-balancer" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="language learning phrasebook vocabulary">
+                    <h3>Language Learning Phrasebook</h3>
+                    <p>Learn common phrases in different languages (pre-bundled content).</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/language-phrasebook" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="world map geography countries">
+                    <h3>World Map (Basic)</h3>
+                    <p>View a simple interactive world map with country names.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/world-map" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="solar system model 2d 3d astronomy">
+                    <h3>Solar System Model (Simple)</h3>
+                    <p>A basic interactive model of the solar system.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/solar-system-model" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games & Fun -->
+        <div class="category-section" id="games-fun-category">
+            <h2>Games & Fun</h2>
+            <div class="tools-grid">
+                <div class="tool-card" data-keywords="tic tac toe game fun">
+                    <h3>Tic-Tac-Toe</h3>
+                    <p>Play the classic Tic-Tac-Toe game against a friend or AI.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/tic-tac-toe" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="connect four game fun">
+                    <h3>Connect Four</h3>
+                    <p>Enjoy a game of Connect Four in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/connect-four" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="hangman game word fun">
+                    <h3>Hangman</h3>
+                    <p>Guess the word before the stick figure is complete.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/hangman" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="sudoku generator solver game puzzle">
+                    <h3>Sudoku Generator/Solver</h3>
+                    <p>Generate new Sudoku puzzles or get help solving existing ones.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/sudoku" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="minesweeper game puzzle">
+                    <h3>Minesweeper</h3>
+                    <p>The classic puzzle game of uncovering mines.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/minesweeper" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="snake game classic retro">
+                    <h3>Snake Game</h3>
+                    <p>Play the timeless Snake game, growing longer with each bite.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/snake-game" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="memory game matching pairs fun">
+                    <h3>Memory Game</h3>
+                    <p>Test your memory by matching pairs of cards.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/memory-game" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="simple drawing pad art sketch">
+                    <h3>Simple Drawing Pad</h3>
+                    <p>A basic canvas for drawing and sketching directly in your browser.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/drawing-pad" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="dice roller random number">
+                    <h3>Dice Roller</h3>
+                    <p>Roll virtual dice for games or random number generation.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/dice-roller" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="coin flipper random heads tails">
+                    <h3>Coin Flipper</h3>
+                    <p>Flip a virtual coin for quick decisions or games.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/coin-flipper" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="rock paper scissors game fun">
+                    <h3>Rock-Paper-Scissors</h3>
+                    <p>Play the classic hand game against the computer.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/rps-game" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="number guessing game fun">
+                    <h3>Number Guessing Game</h3>
+                    <p>Try to guess the secret number within a set range.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/number-guessing" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="word scramble game fun puzzle">
+                    <h3>Word Scramble Game</h3>
+                    <p>Unscramble letters to form words.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/word-scramble" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="conway game of life simulation cellular automata">
+                    <h3>Conway's Game of Life</h3>
+                    <p>Explore the fascinating cellular automaton simulation.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/game-of-life" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+                <div class="tool-card" data-keywords="simple maze generator puzzle game">
+                    <h3>Simple Maze Generator</h3>
+                    <p>Generate random mazes for fun or problem-solving.</p>
+                    <div class="btn-group">
+                        <a href="https://dyal96.github.io/src/maze-generator" target="_blank" rel="noopener noreferrer" class="btn">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Made with ❤️ by <a href="https://github.com/dyal96" target="_blank" rel="noopener noreferrer">Dyal96</a>
+    </footer>
+
+    <script>
+        // Function to set the theme based on localStorage or system preference
+        function setTheme(theme) {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            if (theme === 'dark') {
+                html.classList.add('dark');
+                themeIcon.textContent = '🌙'; // Moon icon for dark mode
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('dark');
+                themeIcon.textContent = '☀️'; // Sun icon for light mode
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Function to toggle the theme
+        function toggleTheme() {
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        }
+
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Check system preference if no theme is saved
+                setTheme('dark');
+            } else {
+                setTheme('light'); // Default to light theme
+            }
+        });
+
+        function filterTools() {
+            const searchInput = document.getElementById('toolSearch');
+            const filter = searchInput.value.toLowerCase();
+            const toolCards = document.querySelectorAll('.tool-card');
+            const categorySections = document.querySelectorAll('.category-section');
+
+            toolCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+
+                if (title.includes(filter) || description.includes(filter) || keywords.includes(filter)) {
+                    card.style.display = 'flex'; // Show the card
+                } else {
+                    card.style.display = 'none'; // Hide the card
+                }
+            });
+
+            // Show/hide categories based on whether they contain visible tools
+            categorySections.forEach(category => {
+                const visibleToolsInCategories = category.querySelectorAll('.tool-card[style*="display: flex"]');
+                if (visibleToolsInCategories.length > 0) {
+                    category.style.display = 'block'; // Show category
+                } else {
+                    category.style.display = 'none'; // Hide category
+                }
+            });
+        }
+    </script>
+</body>
+</html>

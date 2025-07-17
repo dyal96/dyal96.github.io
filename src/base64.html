@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Base64 & SHA-256 Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      color: #333;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .result {
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Base64 & SHA-256 Tool</h1>
+
+<textarea id="inputText" placeholder="Enter text here..."></textarea>
+
+<div class="button-group">
+  <button onclick="encodeBase64()">Encode Base64</button>
+  <button onclick="decodeBase64()">Decode Base64</button>
+  <button onclick="hashSHA256()">SHA-256 Hash</button>
+  <button onclick="clearFields()">Clear</button>
+</div>
+
+<h3>Output:</h3>
+<div class="result" id="outputText"></div>
+
+<script>
+  function encodeBase64() {
+    const input = document.getElementById("inputText").value;
+    try {
+      const encoded = btoa(unescape(encodeURIComponent(input)));
+      document.getElementById("outputText").textContent = encoded;
+    } catch (e) {
+      document.getElementById("outputText").textContent = "Invalid input for Base64 encoding.";
+    }
+  }
+
+  function decodeBase64() {
+    const input = document.getElementById("inputText").value;
+    try {
+      const decoded = decodeURIComponent(escape(atob(input)));
+      document.getElementById("outputText").textContent = decoded;
+    } catch (e) {
+      document.getElementById("outputText").textContent = "Invalid Base64 input.";
+    }
+  }
+
+  async function hashSHA256() {
+    const input = document.getElementById("inputText").value;
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    document.getElementById("outputText").textContent = hashHex;
+  }
+
+  function clearFields() {
+    document.getElementById("inputText").value = '';
+    document.getElementById("outputText").textContent = '';
+  }
+</script>
+</body>
+<footer>
+    Made with ❤️ by <a href="https://github.com/dyal96">Dyal96</a>
+  </footer>
+</html>
