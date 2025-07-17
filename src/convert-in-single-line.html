@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Formatter</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a clean look */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl"> <!-- Increased max-width for side-by-side layout -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Convert Text into Single Line</h1>
+
+        <div class="flex flex-col md:flex-row gap-6 mb-6"> <!-- Flex container for side-by-side text areas -->
+            <div class="w-full md:w-1/2"> <!-- Input text area column -->
+                <label for="inputText" class="block text-gray-700 text-sm font-semibold mb-2">
+                    Paste your text here:
+                </label>
+                <textarea
+                    id="inputText"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out resize-y min-h-[300px]"
+                    placeholder="Type or paste your text with extra newlines here..."
+                ></textarea>
+            </div>
+
+            <div class="w-full md:w-1/2"> <!-- Output text area column -->
+                <label for="outputText" class="block text-gray-700 text-sm font-semibold mb-2">
+                    Formatted Text:
+                </label>
+                <textarea
+                    id="outputText"
+                    class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 focus:outline-none resize-y min-h-[300px]"
+                    readonly
+                    placeholder="Formatted text will appear here..."
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="flex justify-center mb-6">
+            <button
+                id="formatButton"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+            >
+                Format Text
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputTextarea = document.getElementById('inputText');
+            const formatButton = document.getElementById('formatButton');
+            const outputTextarea = document.getElementById('outputText');
+
+            formatButton.addEventListener('click', () => {
+                const rawText = inputTextarea.value;
+                const formattedText = normalizeText(rawText);
+                outputTextarea.value = formattedText;
+            });
+
+            /**
+             * Normalizes text by:
+             * 1. Replacing all newlines (CRLF, LF, CR) with a single space.
+             * 2. Collapsing multiple spaces into single spaces.
+             * 3. Trimming leading/trailing whitespace.
+             * @param {string} text - The input text to normalize.
+             * @returns {string} The normalized text, all on a single line.
+             */
+            function normalizeText(text) {
+                // Step 1: Replace all newlines (CRLF, LF, CR) with a single space
+                let normalized = text.replace(/(\r\n|\n|\r)/g, ' ');
+
+                // Step 2: Collapse multiple spaces into single spaces
+                normalized = normalized.replace(/ {2,}/g, ' ');
+
+                // Step 3: Trim leading/trailing whitespace
+                normalized = normalized.trim();
+
+                return normalized;
+            }
+        });
+    </script>
+</body>
+</html>
