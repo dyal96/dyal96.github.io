@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rememberable Password Generator</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to the top for better history visibility */
+            padding-top: 30px;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* --- MAIN CONTAINER STYLES --- */
+        .container {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            margin-right: 20px; /* Space between main panel and history */
+        }
+        
+        h2 { margin-top: 0; color: var(--primary); }
+
+        .display-box {
+            background: #e0e7ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #3730a3;
+            word-break: break-all;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .display-box:hover { background: #c7d2fe; }
+
+        /* --- STRENGTH METER STYLES --- */
+        .strength-meter-container {
+            width: 100%;
+            height: 25px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease-in-out;
+            border-radius: 4px;
+        }
+
+        .strength-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1f2937;
+            text-shadow: 0 0 2px #fff; 
+        }
+        /* ---------------------------- */
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label { font-weight: 500; font-size: 0.9rem; }
+
+        input[type="range"] { accent-color: var(--primary); width: 60%; }
+        
+        select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: #4f46e5; }
+        .btn:active { transform: scale(0.98); }
+
+        .toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 10px;
+            position: fixed;
+            z-index: 100;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+        }
+
+        .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* --- HISTORY PANEL STYLES (NEW) --- */
+        #historyPanel {
+            background: var(--card);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-height: 80vh; /* Fixed height relative to viewport */
+            overflow-y: auto; /* Enable scrolling */
+            position: sticky;
+            top: 30px;
+        }
+
+        #historyPanel h3 {
+            margin-top: 0;
+            color: var(--text);
+            font-size: 1.2rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            background-color: #f9fafb;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: left;
+            word-break: break-all;
+            border: 1px solid #e5e7eb;
+            transition: background-color 0.1s;
+        }
+
+        .history-item:hover {
+            background-color: #eff6ff; /* Light blue on hover */
+            border-color: var(--primary);
+        }
+
+        .history-item.copied {
+            background-color: #dcfce7; /* Light green when copied */
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Passphrase Generator</h2>
+    
+    <div class="display-box" id="passwordDisplay" onclick="copyPassword('current')">
+        Click Generate
+    </div>
+
+    <div class="strength-meter-container">
+        <div id="strengthBar" class="strength-bar"></div>
+        <div id="strengthText" class="strength-text"></div>
+    </div>
+    <div class="controls">
+        <div class="control-group">
+            <label>Word Count: <span id="countVal">4</span></label>
+            <input type="range" id="wordCount" min="3" max="8" value="4" oninput="updateCount()">
+        </div>
+
+        <div class="control-group">
+            <label>Separator</label>
+            <select id="separator">
+                <option value="-">Hyphen (-)</option>
+                <option value=".">Dot (.)</option>
+                <option value="_">Underscore (_)</option>
+                <option value=" ">Space ( )</option>
+                <option value="">None</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Capitalize Words</label>
+            <input type="checkbox" id="capitalize" checked>
+        </div>
+
+        <div class="control-group">
+            <label>Add Number (00-99) at End</label>
+            <input type="checkbox" id="addNumber" checked>
+        </div>
+
+        <div class="control-group">
+            <label>Insert Random Symbol</label>
+            <input type="checkbox" id="addSymbol" unchecked>
+        </div>
+    </div>
+
+    <button class="btn" onclick="generatePassword()">Generate Passphrase</button>
+</div>
+
+<div id="historyPanel">
+    <h3>📋 Recent Passphrases (Click to Copy)</h3>
+    <div id="historyList">
+        <p style="font-style: italic; color: #6b7280;">History will appear here after generation.</p>
+    </div>
+</div>
+<div id="toast" class="toast">Copied to clipboard!</div>
+
+<script>
+    // --- GLOBAL VARIABLES ---
+    const MAX_HISTORY = 10;
+    let passwordHistory = [];
+    const symbols = "!@#$%^&*()_+=-{}[]:;<>?,./";
+    const SYMBOL_REPERTOIRE = 30; // Estimated unique symbols for entropy
+
+    // A compact list of ~450 common, distinct, easy-to-spell English words
+    const wordList = [
+        "ability", "able", "aboard", "accept", "action", "active", "actor", "admit", "adult", "advice",
+        "affect", "afraid", "agent", "agree", "ahead", "allow", "alone", "alpha", "amber", "angel",
+        "anger", "angle", "angry", "animal", "answer", "appeal", "apple", "apply", "area", "argue",
+        "army", "around", "arrive", "artist", "aspect", "asset", "assist", "atom", "attack", "audio",
+        "audit", "author", "auto", "avenue", "avoid", "award", "aware", "baby", "baker", "ball",
+        "bank", "bar", "base", "basic", "basis", "basket", "battle", "beach", "bear", "beat",
+        "beauty", "become", "bed", "beer", "begin", "bell", "belt", "bench", "berry", "best",
+        "bet", "better", "bias", "big", "bike", "bill", "bird", "birth", "bit", "bite",
+        "black", "blade", "blame", "blank", "blast", "blend", "block", "blood", "blue", "board",
+        "boat", "body", "bone", "bonus", "book", "boost", "border", "boss", "bottle", "bottom",
+        "box", "boy", "brain", "branch", "brave", "bread", "break", "breath", "brick", "bridge",
+        "brief", "bright", "bring", "broad", "brown", "brush", "buddy", "budget", "build", "bunch",
+        "burn", "bus", "bush", "busy", "button", "buyer", "cable", "cake", "call", "calm",
+        "camera", "camp", "can", "cancel", "candy", "canvas", "cap", "capital", "car", "card",
+        "care", "career", "carpet", "carry", "case", "cash", "cast", "cat", "catch", "cause",
+        "cell", "center", "chain", "chair", "chart", "check", "chest", "chief", "child", "choice",
+        "circle", "city", "claim", "class", "clean", "clear", "climb", "clock", "close", "cloth",
+        "cloud", "club", "coach", "coast", "code", "coffee", "cold", "collar", "color", "common",
+        "cool", "copy", "corner", "cost", "count", "county", "couple", "course", "court", "cover",
+        "craft", "crash", "cream", "create", "credit", "crew", "crisis", "cross", "crowd", "crown",
+        "curve", "cycle", "daily", "dance", "danger", "dark", "data", "date", "deal", "dear",
+        "debate", "debt", "deck", "deep", "deer", "degree", "delay", "demand", "depth", "design",
+        "desk", "detail", "device", "diet", "dinner", "direct", "dirt", "dish", "disk", "doctor",
+        "dog", "door", "double", "doubt", "draft", "drag", "drama", "draw", "dream", "dress",
+        "drink", "drive", "driver", "drop", "drum", "dry", "duck", "dust", "duty", "eagle",
+        "ear", "early", "earth", "ease", "east", "easy", "eat", "echo", "edge", "editor",
+        "effect", "effort", "egg", "eight", "either", "elbow", "elder", "elect", "element", "elite",
+        "empty", "end", "energy", "engine", "enjoy", "enough", "enter", "entry", "equal", "error",
+        "escape", "essay", "estate", "event", "exact", "exam", "exit", "expert", "extra", "eye",
+        "face", "fact", "factor", "fail", "fair", "fall", "family", "fan", "farm", "farmer",
+        "fast", "father", "fault", "fear", "feed", "feel", "female", "fence", "field", "fight",
+        "figure", "file", "fill", "film", "final", "finger", "finish", "fire", "firm", "first",
+        "fish", "fix", "flag", "flat", "flight", "floor", "flow", "flower", "fly", "focus",
+        "fold", "food", "foot", "force", "forest", "form", "formal", "fox", "frame", "free",
+        "fresh", "friend", "front", "fruit", "fuel", "fun", "funny", "future", "gain", "game",
+        "gap", "garage", "garden", "gas", "gate", "gather", "gear", "gene", "gift", "girl",
+        "give", "glad", "glass", "global", "glove", "goal", "gold", "golf", "good", "grab",
+        "grade", "grand", "grass", "great", "green", "ground", "group", "grow", "growth", "guard",
+        "guess", "guest", "guide", "guitar", "habit", "hair", "half", "hall", "hand", "handle",
+        "hang", "happy", "hard", "hat", "hate", "have", "head", "health", "heart", "heat",
+        "heavy", "height", "hello", "help", "hero", "hide", "high", "hill", "hire", "hist",
+        "hold", "hole", "home", "honey", "hope", "horse", "host", "hotel", "hour", "house",
+        "huge", "human", "hunt", "hurt", "idea", "image", "impact", "income", "index", "info",
+        "injury", "inner", "input", "inside", "iron", "island", "issue", "item", "jacket", "jazz",
+        "jeep", "join", "joint", "joke", "judge", "juice", "jump", "junior", "jury", "keep",
+        "key", "kick", "kid", "kill", "kind", "king", "kiss", "kite", "knee", "knife",
+        "knock", "know", "lab", "label", "labor", "lack", "ladder", "lady", "lake", "lamp",
+        "land", "lane", "large", "laser", "last", "late", "laugh", "law", "layer", "lead",
+        "leaf", "learn", "leave", "lecture", "left", "leg", "legal", "lemon", "length", "less",
+        "letter", "level", "life", "light", "limit", "line", "link", "lion", "lip", "list",
+        "listen", "live", "load", "loan", "local", "lock", "log", "long", "look", "loop",
+        "loose", "loss", "lost", "lot", "loud", "love", "low", "luck", "lunch", "lung",
+        "machine", "mad", "magic", "mail", "main", "major", "make", "male", "mall", "man",
+        "manage", "mango", "map", "mark", "market", "mask", "mass", "master", "match", "math",
+        "matter", "meal", "mean", "meat", "media", "meet", "member", "memory", "menu", "mess",
+        "metal", "method", "middle", "might", "milk", "mind", "mine", "minor", "minute", "mirror",
+        "miss", "mix", "mobile", "mode", "model", "modern", "mom", "moment", "money", "month",
+        "mood", "moon", "moral", "more", "most", "mother", "motor", "mount", "mouse", "mouth",
+        "move", "movie", "much", "mud", "muscle", "music", "must", "my", "nail", "name",
+        "nation", "native", "navy", "near", "neck", "need", "nerve", "nest", "net", "news",
+        "next", "nice", "night", "noise", "normal", "north", "nose", "note", "notice", "novel",
+        "now", "number", "nurse", "object", "ocean", "offer", "office", "oil", "okay", "old"
+    ];
+
+    function updateCount() {
+        document.getElementById('countVal').textContent = document.getElementById('wordCount').value;
+        generatePassword(); 
+    }
+
+    // --- STRENGTH LOGIC ---
+    function checkStrength(wordCount, hasNumber, hasSymbol) {
+        const W = wordList.length; 
+        const N = wordCount;
+        let entropy = N * Math.log2(W); 
+
+        if (hasNumber) {
+            entropy += Math.log2(100); 
+        }
+
+        if (hasSymbol) {
+            entropy += Math.log2(SYMBOL_REPERTOIRE); 
+        }
+
+        return Math.round(entropy);
+    }
+
+    function updateStrengthMeter(entropy) {
+        const bar = document.getElementById('strengthBar');
+        const text = document.getElementById('strengthText');
+        
+        let strength = "";
+        let width = 0;
+        let color = "";
+
+        if (entropy < 60) {
+            strength = "Weak";
+            width = 25;
+            color = "#ef4444"; // Red
+        } else if (entropy < 80) {
+            strength = "Fair";
+            width = 50;
+            color = "#f97316"; // Orange
+        } else if (entropy < 100) {
+            strength = "Good";
+            width = 75;
+            color = "#facc15"; // Yellow
+        } else {
+            strength = "Excellent";
+            width = 100;
+            color = "#10b981"; // Green
+        }
+
+        bar.style.width = width + '%';
+        bar.style.backgroundColor = color;
+        text.textContent = `${strength} (${entropy} bits)`;
+    }
+    // --- END STRENGTH LOGIC ---
+    
+    // --- HISTORY LOGIC (NEW) ---
+    function updateHistory(newPassword) {
+        // Add new password to the start of the array
+        passwordHistory.unshift(newPassword); 
+        
+        // Trim array to max size
+        if (passwordHistory.length > MAX_HISTORY) {
+            passwordHistory = passwordHistory.slice(0, MAX_HISTORY);
+        }
+        
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = ''; // Clear the current list
+        
+        passwordHistory.forEach((pass, index) => {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.textContent = pass;
+            // Use a data attribute to store the index for easy copying
+            item.setAttribute('data-index', index); 
+            // Bind click event to copy the history item
+            item.onclick = () => copyPassword(index, item); 
+            historyList.appendChild(item);
+        });
+    }
+
+    // --- MAIN GENERATOR FUNCTION ---
+    function generatePassword() {
+        const count = parseInt(document.getElementById('wordCount').value);
+        const separator = document.getElementById('separator').value;
+        const capitalize = document.getElementById('capitalize').checked;
+        const addNumber = document.getElementById('addNumber').checked;
+        const addSymbol = document.getElementById('addSymbol').checked;
+        
+        let passwordArray = [];
+
+        const getRandomWord = () => {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return wordList[array[0] % wordList.length];
+        };
+
+        for (let i = 0; i < count; i++) {
+            let word = getRandomWord();
+            if (capitalize) {
+                word = word.charAt(0).toUpperCase() + word.slice(1);
+            }
+            passwordArray.push(word);
+        }
+
+        let password = passwordArray.join(separator);
+
+        if (addNumber) {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            const num = array[0] % 100; 
+            password += num.toString().padStart(2, '0');
+        }
+
+        if (addSymbol && password.length > 0) {
+            const symbolIndex = Math.floor(Math.random() * symbols.length);
+            const randomSymbol = symbols[symbolIndex];
+            
+            const insertPoint = Math.floor(Math.random() * (password.length + 1)); 
+            
+            password = password.slice(0, insertPoint) + 
+                       randomSymbol + 
+                       password.slice(insertPoint);
+        }
+
+        // --- UPDATE UI AND HISTORY ---
+        const entropy = checkStrength(count, addNumber, addSymbol);
+        updateStrengthMeter(entropy); 
+
+        const display = document.getElementById('passwordDisplay');
+        display.textContent = password;
+        
+        display.style.backgroundColor = "#e0e7ff";
+        display.style.color = "#3730a3";
+        
+        updateHistory(password); // <-- ADD PASSWORD TO HISTORY
+    }
+
+    // --- UTILITY: COPY FUNCTION (MODIFIED) ---
+    function copyPassword(source, element = null) {
+        let passwordToCopy = '';
+        let targetElement = element;
+        
+        if (source === 'current') {
+            passwordToCopy = document.getElementById('passwordDisplay').textContent;
+            targetElement = document.getElementById('passwordDisplay');
+            if(passwordToCopy === "Click Generate") return;
+        } else {
+            // Source is an index from the history array
+            passwordToCopy = passwordHistory[source];
+            // Clear all 'copied' styles first
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('copied'));
+        }
+
+        navigator.clipboard.writeText(passwordToCopy).then(() => {
+            // Show toast notification
+            const toast = document.getElementById("toast");
+            toast.className = "toast show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+            
+            // Visual feedback on the copied element
+            if (source === 'current') {
+                targetElement.style.backgroundColor = "#dcfce7";
+                targetElement.style.color = "#166534";
+            } else if (targetElement) {
+                targetElement.classList.add('copied');
+            }
+        });
+    }
+
+    // Generate one on load
+    window.onload = generatePassword;
+
+</script>
+
+</body>
+</html>

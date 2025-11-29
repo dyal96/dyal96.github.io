@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Memorable Password Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-6 transition">
+
+<!-- Main Card -->
+<div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8 border border-gray-200 space-y-6">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-800">🔐 Memorable Password Generator</h1>
+        <button id="themeToggle" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">🌙</button>
+    </div>
+
+    <!-- Settings -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="font-semibold">Number of Words</label>
+            <input id="wordCount" type="number" value="4" min="2" max="12"
+                class="w-full mt-1 rounded-lg border-gray-300 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="font-semibold">Include Numbers</label>
+            <input id="includeNumbers" type="checkbox" class="h-4 w-4 ml-2 text-blue-600">
+        </div>
+
+        <div>
+            <label class="font-semibold">Include Symbols</label>
+            <input id="includeSymbols" type="checkbox" class="h-4 w-4 ml-2 text-blue-600">
+        </div>
+
+        <div>
+            <label class="font-semibold">Password Style</label>
+            <select id="styleMode" class="w-full mt-1 rounded-lg border-gray-300">
+                <option value="dash">word-word-word</option>
+                <option value="camel">WordWordWord</option>
+                <option value="dot">word.word.word</option>
+                <option value="underscore">word_word_word</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Generate Button -->
+    <button onclick="generatePassword()" class="w-full py-3 bg-blue-600 text-white rounded-xl text-lg hover:bg-blue-700 transition">Generate Password</button>
+
+    <!-- Password Output -->
+    <div class="bg-gray-100 p-4 rounded-xl flex justify-between items-center">
+        <span id="passwordOutput" class="font-mono text-lg text-gray-800">Your password will appear here…</span>
+        <button onclick="copyPassword()" class="ml-4 px-3 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Copy</button>
+    </div>
+
+    <!-- Strength Meter -->
+    <div>
+        <label class="font-semibold">Strength:</label>
+        <div class="w-full h-3 bg-gray-200 rounded-full mt-1">
+            <div id="strengthBar" class="h-3 rounded-full bg-red-500 w-1/6"></div>
+        </div>
+        <p id="entropyText" class="text-gray-600 text-sm mt-1">Entropy: 0 bits</p>
+    </div>
+
+    <!-- Password History -->
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold mb-2">Recent Passwords</h2>
+        <ul id="historyList" class="space-y-2 text-gray-700"></ul>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-lg opacity-0 transition">Copied!</div>
+
+<script>
+// Word list
+const words = [ 'solar','river','ocean','sky','mountain','forest','lunar','shadow','pixel','crystal','ember','silver','nova','galaxy','storm','echo','delta','alpha','fusion','quantum','whisper','meadow','sunrise','sunset','stone','breeze','flare','cloud','thunder','orbit','star','light','dream','spark','wave','cosmic','leaf','space' ];
+
+// Theme Toggle
+const themeBtn = document.getElementById("themeToggle");
+themeBtn.onclick = () => {
+    document.body.classList.toggle("bg-gray-900");
+    document.body.classList.toggle("text-white");
+};
+
+// Generate Password
+function generatePassword() {
+    const count = document.getElementById('wordCount').value;
+    const useNumbers = document.getElementById('includeNumbers').checked;
+    const useSymbols = document.getElementById('includeSymbols').checked;
+    const style = document.getElementById('styleMode').value;
+
+    let passWords = [];
+    for (let i = 0; i < count; i++) passWords.push(words[Math.floor(Math.random() * words.length)]);
+
+    let password = formatPassword(passWords, style);
+    if (useNumbers) password += Math.floor(Math.random() * 99);
+    if (useSymbols) password += ['!', '@', '#', '$', '%'][Math.floor(Math.random() * 5)];
+
+    document.getElementById('passwordOutput').textContent = password;
+    updateStrength(password, count);
+    saveHistory(password);
+}
+
+// Format Styles
+function formatPassword(arr, style) {
+    switch(style) {
+        case "camel": return arr.map(a => a.charAt(0).toUpperCase() + a.slice(1)).join("");
+        case "dot": return arr.join('.')
+        case "underscore": return arr.join('_');
+        default: return arr.join('-');
+    }
+}
+
+// Copy
+function copyPassword() {
+    const text = document.getElementById('passwordOutput').textContent;
+    navigator.clipboard.writeText(text);
+    const toast = document.getElementById('toast');
+    toast.style.opacity = 1;
+    setTimeout(() => toast.style.opacity = 0, 1200);
+}
+
+// Strength Meter
+function updateStrength(password, wordCount) {
+    const entropy = Math.round(wordCount * Math.log2(words.length));
+    document.getElementById('entropyText').textContent = `Entropy: ${entropy} bits`;
+
+    const bar = document.getElementById('strengthBar');
+    if (entropy < 40) bar.style.width = "25%", bar.className = "h-3 bg-red-500 rounded-full";
+    else if (entropy < 60) bar.style.width = "50%", bar.className = "h-3 bg-yellow-500 rounded-full";
+    else if (entropy < 80) bar.style.width = "75%", bar.className = "h-3 bg-green-500 rounded-full";
+    else bar.style.width = "100%", bar.className = "h-3 bg-blue-600 rounded-full";
+}
+
+// Password History
+function saveHistory(p) {
+    const list = document.getElementById('historyList');
+    const item = document.createElement('li');
+    item.className = "flex justify-between bg-gray-100 p-2 rounded-lg";
+    item.innerHTML = `<span class='font-mono'>${p}</span> <button class='text-blue-600' onclick='navigator.clipboard.writeText("${p}")'>Copy</button>`;
+    list.prepend(item);
+    if (list.children.length > 5) list.removeChild(list.lastChild);
+}
+</script>
+
+</body>
+</html>
