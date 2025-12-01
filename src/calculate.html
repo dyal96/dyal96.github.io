@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Price per Gram & Kg Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e7f3ff;
+      border-left: 4px solid #2196F3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Price & Quantity Calculator</h2>
+
+  <label for="totalPrice">Total Price (Rs)</label>
+  <input type="number" id="totalPrice" placeholder="e.g. 160">
+
+  <label for="totalWeight">Total Weight (grams)</label>
+  <input type="number" id="totalWeight" placeholder="e.g. 1000 for 1kg">
+
+  <label for="amountToSpend">Amount to Spend (Rs)</label>
+  <input type="number" id="amountToSpend" placeholder="e.g. 10">
+
+  <label for="gramsToBuy">Quantity in Grams</label>
+  <input type="number" id="gramsToBuy" placeholder="e.g. 300">
+
+  <div class="result" id="results">
+    <p>Price per gram: —</p>
+    <p>Price per kg: —</p>
+    <p>Grams for entered amount: —</p>
+    <p>Price for entered grams: —</p>
+  </div>
+
+  <script>
+    const totalPriceInput = document.getElementById('totalPrice');
+    const totalWeightInput = document.getElementById('totalWeight');
+    const amountInput = document.getElementById('amountToSpend');
+    const gramsInput = document.getElementById('gramsToBuy');
+    const resultDiv = document.getElementById('results');
+
+    function updateResults() {
+      const totalPrice = parseFloat(totalPriceInput.value);
+      const totalWeight = parseFloat(totalWeightInput.value);
+      const amount = parseFloat(amountInput.value);
+      const grams = parseFloat(gramsInput.value);
+
+      let pricePerGram = NaN;
+      let pricePerKg = NaN;
+      let gramsForAmount = NaN;
+      let priceForGrams = NaN;
+
+      if (!isNaN(totalPrice) && !isNaN(totalWeight) && totalWeight > 0) {
+        pricePerGram = totalPrice / totalWeight;
+        pricePerKg = pricePerGram * 1000;
+
+        if (!isNaN(amount)) {
+          gramsForAmount = amount / pricePerGram;
+        }
+
+        if (!isNaN(grams)) {
+          priceForGrams = grams * pricePerGram;
+        }
+
+        resultDiv.innerHTML = `
+          <p>Price per gram: ₹${pricePerGram.toFixed(2)}</p>
+          <p>Price per kg: ₹${pricePerKg.toFixed(2)} /kg</p>
+          <p>Grams for entered amount: ${!isNaN(gramsForAmount) ? gramsForAmount.toFixed(2) + ' g' : '—'}</p>
+          <p>Price for entered grams: ₹${!isNaN(priceForGrams) ? priceForGrams.toFixed(2) : '—'}</p>
+        `;
+      } else {
+        resultDiv.innerHTML = `<p>Please enter valid total price and weight.</p>`;
+      }
+    }
+
+    totalPriceInput.addEventListener('input', updateResults);
+    totalWeightInput.addEventListener('input', updateResults);
+    amountInput.addEventListener('input', updateResults);
+    gramsInput.addEventListener('input', updateResults);
+  </script>
+
+</body>
+</html>
