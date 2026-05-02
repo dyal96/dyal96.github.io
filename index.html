@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deen Dyal | Graphic Designer & Motion Artist</title>
+    <meta name="description" content="Portfolio of Deen Dyal — Professional Graphic Designer, Video Editor & Motion Designer. 10+ years crafting visual experiences.">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="dark-mode.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Ambient Background -->
+<div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+</div>
+
+<!-- Navbar -->
+<nav id="navbar">
+    <div class="container nav-inner">
+        <a href="#home" class="logo">DEEN<span>DYAL</span></a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+            <a href="#contact" class="btn btn-primary nav-cta">Hire Me</a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#about" class="mob-link">About</a>
+        <a href="#experience" class="mob-link">Experience</a>
+        <a href="#skills" class="mob-link">Skills</a>
+        <a href="#services" class="mob-link">Services</a>
+        <a href="#pricing" class="mob-link">Pricing</a>
+        <a href="#contact" class="mob-link">Contact</a>
+        <a href="#contact" class="btn btn-primary" style="margin-top:8px;text-align:center;">Hire Me</a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+    <div class="container hero-layout">
+        <div class="hero-text">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Available for freelance work
+            </div>
+            <h1>Crafting Visual<br><span class="gradient-text">Experiences</span><br>Since 2012.</h1>
+            <p class="hero-desc">Graphic Designer · Video Editor · Motion Artist<br>Helping brands stand out through high-impact visuals, dynamic video and professional motion graphics.</p>
+            <div class="hero-cta">
+                <a href="#services" class="btn btn-primary">View Services</a>
+                <a href="#pricing" class="btn btn-ghost">Rate Card</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-num">10+</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">200+</span>
+                    <span class="stat-label">Projects Done</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">50+</span>
+                    <span class="stat-label">Happy Clients</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="profile-ring">
+                <div class="profile-avatar">
+                    <div class="avatar-initials">DD</div>
+                </div>
+                <div class="ring-orbit ring-1">
+                    <div class="orbit-dot" style="--angle:0deg"></div>
+                </div>
+                <div class="ring-orbit ring-2">
+                    <div class="orbit-dot" style="--angle:120deg"></div>
+                </div>
+            </div>
+            <div class="floating-card card-1 glass-card">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                <span>Brand Identity</span>
+            </div>
+            <div class="floating-card card-2 glass-card">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                <span>Motion Graphics</span>
+            </div>
+            <div class="floating-card card-3 glass-card">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Print Media</span>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-hint">
+        <div class="scroll-line"></div>
+        <span>scroll</span>
+    </div>
+</section>
+
+<!-- About -->
+<section id="about">
+    <div class="container">
+        <div class="section-label">About Me</div>
+        <h2 class="section-title">Designer by passion,<br>professional by <span class="gradient-text">decade</span>.</h2>
+        <div class="about-grid">
+            <div class="glass-card about-bio">
+                <p>I've been working in the creative industry since <strong>2012</strong>, with a professional career starting in <strong>2015</strong>. My expertise lies in blending creativity with operational precision.</p>
+                <p style="margin-top:16px;">Currently at <strong>Sapphire Media Limited</strong>, I manage complex visual campaigns across Metro stations, Railways, and Digital LED screens across the city.</p>
+                <p style="margin-top:16px;">I transform ideas into compelling visual stories that resonate with audiences and drive real business results.</p>
+                <div class="tools-row">
+                    <span class="tool-tag">Photoshop</span>
+                    <span class="tool-tag">Illustrator</span>
+                    <span class="tool-tag">Premiere Pro</span>
+                    <span class="tool-tag">After Effects</span>
+                    <span class="tool-tag">InDesign</span>
+                    <span class="tool-tag">CorelDRAW</span>
+                </div>
+            </div>
+            <div class="about-highlights">
+                <div class="glass-card highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h4>Brand Identity</h4>
+                    <p>Full-spectrum branding from strategy to final assets</p>
+                </div>
+                <div class="glass-card highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <h4>LED & Digital</h4>
+                    <p>Creatives optimised for large-format digital screens</p>
+                </div>
+                <div class="glass-card highlight-card">
+                    <div class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                    </div>
+                    <h4>Video Production</h4>
+                    <p>End-to-end video editing, colour grading & motion</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+    <div class="container">
+        <div class="section-label">Work History</div>
+        <h2 class="section-title">Professional <span class="gradient-text">Journey</span></h2>
+        <div class="timeline">
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jun 2025 — Present</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Sr. Graphic Designer / Creative Director</h3>
+                            <span class="company-badge">Sapphire Media Limited</span>
+                        </div>
+                        <span class="status-badge">Current</span>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Creative Design &amp; Adaption for multiple sizes — OOH, ATL, BTL, Transit Media.</li>
+                        <li>Mainly BQS, Metro and LED &amp; Static Media for PAN India campaigns.</li>
+                        <li>Client handling and end-to-end printing process management.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Feb 2024 — Jun 2025</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Sr. Graphic Designer</h3>
+                            <span class="company-badge">Printmax</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Creative design &amp; adaption for indoor media print.</li>
+                        <li>Social media marketing &amp; promotional design.</li>
+                        <li>Meta and Google Ads campaign management.</li>
+                        <li>Branding &amp; client handling.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Sep 2022 — Dec 2023</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Instructor — Graphic Design</h3>
+                            <span class="company-badge">Career Point</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Teaching Graphic Design, Social Media Design &amp; Promotional Design.</li>
+                        <li>Planning study materials and design printing exercises.</li>
+                        <li>Digital Marketing instruction.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Feb 2020 — Sep 2022</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Sr. Graphic Designer</h3>
+                            <span class="company-badge">Purezento</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Mockup &amp; e-commerce aligned product design.</li>
+                        <li>Social media banner design for website.</li>
+                        <li>Packaging material &amp; digital marketing content design.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Jan 2018 — Dec 2019</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Graphic Designer</h3>
+                            <span class="company-badge">Yubingo Creations Pvt Ltd</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Design for UV, DTF &amp; Sublimation printing processes.</li>
+                        <li>Packaging material design &amp; corporate / social media campaigns.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2017 — 2018</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Graphic Designer</h3>
+                            <span class="company-badge">Avanti Media Pvt Ltd (TV-100)</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Creative design for events — L-band &amp; Aston band design.</li>
+                        <li>Banner, invite design &amp; field duty in events.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2015 — 2017</div>
+                <div class="glass-card timeline-card">
+                    <div class="tl-header">
+                        <div>
+                            <h3>Graphic Designer</h3>
+                            <span class="company-badge">Channi Flex Design</span>
+                        </div>
+                    </div>
+                    <ul class="tl-list">
+                        <li>Flex design, printing vinyl, mounting.</li>
+                        <li>Pamphlet, card, letterhead &amp; visiting card design.</li>
+                        <li>Sublimation printing.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Skills & Education -->
+<section id="skills">
+    <div class="container">
+        <div class="section-label">Skills &amp; Education</div>
+        <h2 class="section-title">Tools, Tech &amp; <span class="gradient-text">Qualifications</span></h2>
+        <div class="skills-edu-grid">
+            <div class="glass-card skills-box">
+                <h3 class="skills-heading">Design Tools</h3>
+                <div class="skill-bars">
+                    <div class="skill-item">
+                        <div class="skill-label"><span>CorelDRAW</span><span>95%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:95%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label"><span>Photoshop</span><span>92%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:92%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label"><span>Illustrator</span><span>90%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:90%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label"><span>After Effects</span><span>82%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:82%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label"><span>Premiere Pro</span><span>85%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label"><span>InDesign</span><span>78%</span></div>
+                        <div class="skill-track"><div class="skill-fill" style="--pct:78%"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="edu-certs">
+                <div class="glass-card edu-card">
+                    <div class="edu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </div>
+                    <div>
+                        <h4>B.Tech — Civil Engineering</h4>
+                        <p>IK Gujral Punjab Technical University</p>
+                    </div>
+                </div>
+                <div class="glass-card edu-card">
+                    <div class="edu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </div>
+                    <div>
+                        <h4>Diploma — Civil Engineering</h4>
+                        <p>Punjab State Board of Technical Education</p>
+                    </div>
+                </div>
+                <div class="glass-card edu-card cert">
+                    <div class="edu-icon cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    </div>
+                    <div>
+                        <h4>Google Digital Marketing</h4>
+                        <p>Certified by Google</p>
+                    </div>
+                </div>
+                <div class="glass-card edu-card cert">
+                    <div class="edu-icon cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    </div>
+                    <div>
+                        <h4>Facebook &amp; Instagram Marketing</h4>
+                        <p>Meta Certified</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+    <div class="container">
+        <div class="section-label">What I Do</div>
+        <h2 class="section-title">Creative <span class="gradient-text">Services</span></h2>
+        <div class="services-grid">
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14M15.54 8.46a5 5 0 0 1 0 7.07M8.46 15.54a5 5 0 0 1 0-7.07"/></svg>
+                </div>
+                <h3>Logo Design</h3>
+                <p>Timeless logo concepts that become the face of your brand — from sketch to final vector file.</p>
+                <div class="service-price">Rs.5,000+</div>
+            </div>
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                </div>
+                <h3>Brand Guidelines</h3>
+                <p>Comprehensive brand identity systems covering typography, colour palettes, and usage rules.</p>
+                <div class="service-price">Rs.10,000+</div>
+            </div>
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </div>
+                <h3>Social Media Design</h3>
+                <p>Eye-catching posts, stories, thumbnails and ad creatives designed for maximum engagement.</p>
+                <div class="service-price">Rs.500+</div>
+            </div>
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                </div>
+                <h3>Video Editing</h3>
+                <p>Professional editing for Reels, YouTube, TikTok, corporate promos and event highlights.</p>
+                <div class="service-price">Rs.2,000+</div>
+            </div>
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3>Motion Graphics</h3>
+                <p>Dynamic animations and motion that bring your brand to life on screen with impact.</p>
+                <div class="service-price">Rs.3,000+</div>
+            </div>
+            <div class="glass-card service-card">
+                <div class="service-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <h3>Packaging Design</h3>
+                <p>Creative and functional packaging for retail products — dielines, mockups and print-ready files.</p>
+                <div class="service-price">Rs.7,000+</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+    <div class="container">
+        <div class="section-label">Rate Card</div>
+        <h2 class="section-title">Transparent <span class="gradient-text">Pricing</span></h2>
+        <p class="section-subtitle">Straightforward rates for quality creative work. All prices in Indian Rupees.</p>
+        <div class="pricing-tabs">
+            <button class="tab-btn active" data-tab="design">Design</button>
+            <button class="tab-btn" data-tab="video">Video & Motion</button>
+        </div>
+        <div class="tab-content active" id="tab-design">
+            <div class="price-grid">
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Logo Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.5,000 – Rs.15,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Brand Guidelines</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.10,000 – Rs.30,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Social Media Poster</h4>
+                        <span class="price-unit">Per Post</span>
+                    </div>
+                    <div class="price-amount">Rs.500 – Rs.1,500</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Brochure Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.3,000 – Rs.8,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Pamphlet / Flyer</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.1,500 – Rs.5,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Poster Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.1,500 – Rs.4,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>YouTube Thumbnail</h4>
+                        <span class="price-unit">Per Thumbnail</span>
+                    </div>
+                    <div class="price-amount">Rs.500 – Rs.1,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Banner Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.1,000 – Rs.2,500</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Business Card</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.1,000 – Rs.2,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Packaging Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.7,000 – Rs.20,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Custom Illustrations</h4>
+                        <span class="price-unit">Per Illustration</span>
+                    </div>
+                    <div class="price-amount">Rs.3,000 – Rs.10,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Infographic Design</h4>
+                        <span class="price-unit">Per Project</span>
+                    </div>
+                    <div class="price-amount">Rs.5,000 – Rs.15,000</div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-video">
+            <div class="price-grid">
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Video Editing</h4>
+                        <span class="price-unit">Per Minute</span>
+                    </div>
+                    <div class="price-amount">Rs.2,000 – Rs.7,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Video Shooting</h4>
+                        <span class="price-unit">Per Day</span>
+                    </div>
+                    <div class="price-amount">Rs.10,000 – Rs.30,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Reels Creation</h4>
+                        <span class="price-unit">Per Reel</span>
+                    </div>
+                    <div class="price-amount">Rs.1,500 – Rs.4,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Promo Videos</h4>
+                        <span class="price-unit">Per Minute</span>
+                    </div>
+                    <div class="price-amount">Rs.5,000 – Rs.15,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Motion Graphics</h4>
+                        <span class="price-unit">Per Minute</span>
+                    </div>
+                    <div class="price-amount">Rs.3,000 – Rs.10,000</div>
+                </div>
+                <div class="glass-card price-row">
+                    <div class="price-info">
+                        <h4>Branding for Events</h4>
+                        <span class="price-unit">Custom Pricing</span>
+                    </div>
+                    <div class="price-amount">Contact Me</div>
+                </div>
+            </div>
+        </div>
+        <div class="pricing-note glass-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <p>Prices vary based on complexity and turnaround time. <strong>Contact me for a custom quote.</strong></p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<footer id="contact">
+    <div class="container">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-title">Let's Build Something<br><span class="gradient-text">Amazing Together</span></h2>
+        <p class="section-subtitle">Have a project in mind? Drop me a message and let's talk.</p>
+        <div class="contact-grid">
+            <div class="glass-card contact-card">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <h4>Email</h4>
+                <a href="mailto:dyalsolutions@gmail.com">dyalsolutions@gmail.com</a>
+            </div>
+            <div class="glass-card contact-card">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+                <h4>LinkedIn</h4>
+                <a href="https://linkedin.com/in/dyal96" target="_blank">linkedin.com/in/dyal96</a>
+            </div>
+            <div class="glass-card contact-card">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </div>
+                <h4>GitHub</h4>
+                <a href="https://github.com/dyal96" target="_blank">github.com/dyal96</a>
+            </div>
+            <div class="glass-card contact-card">
+                <div class="contact-icon whatsapp-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.852L.051 23.784a.5.5 0 0 0 .614.635l6.094-1.592A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.7-.512-5.24-1.406l-.373-.217-3.87 1.01 1.04-3.778-.23-.386A9.945 9.945 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                </div>
+                <h4>WhatsApp</h4>
+                <a href="https://wa.me/917973439245" target="_blank">+91 797-343-9245</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="copyright">&copy; 2026 Deen Dyal. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Floating Action Buttons -->
+<div class="fab-group" id="fab-group">
+    <div class="fab-label-group">
+        <span class="fab-label">WhatsApp</span>
+        <a href="https://wa.me/917973439245" target="_blank" class="fab fab-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.852L.051 23.784a.5.5 0 0 0 .614.635l6.094-1.592A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.7-.512-5.24-1.406l-.373-.217-3.87 1.01 1.04-3.778-.23-.386A9.945 9.945 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        </a>
+    </div>
+    <div class="fab-label-group">
+        <span class="fab-label">Email Me</span>
+        <a href="mailto:dyalsolutions@gmail.com" class="fab fab-email" title="Send Email" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+    </div>
+    <div class="fab-label-group">
+        <span class="fab-label">Resume</span>
+        <a href="Dyal Resume-2026.pdf" download class="fab fab-resume" title="Download Resume" aria-label="Download Resume">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </a>
+    </div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
